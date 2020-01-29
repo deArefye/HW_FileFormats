@@ -1,0 +1,37 @@
+import json
+from pprint import pprint
+
+data_str = ''
+
+with open("files/newsafr.json", encoding="utf-8") as data:
+    json_data = json.load(data)
+    for news in json_data["rss"]["channel"]["items"]:
+      data_str += (news['description']).lower() #lower() - для исключения влияния регистра на рейтинг
+
+
+def get_top10_words(x):
+  """This function gets string, then split it by ' ', then find words equal or longer than 6 characters. After that 
+  the function rate all words by fruequency and print top-10 words in the end.
+  """
+  data_list = x.split()  # преобразуем строку в список
+  data_list_6 = []  # создаем список куда будем складывать слова 6 и более букв
+  for item in data_list:
+    if len(item)  >= 6:
+      data_list_6.append(item)
+
+  rated_words = {}  # создаем словарь где будем формировать рейтинг 'слово':'сколько раз встречалось'
+  for item in data_list_6:
+    if item in rated_words:
+      rated_words[item] += 1
+    else:
+      rated_words[item] = 1
+
+  list_dct = list(rated_words.items())  # создаем список для того, чтобы отсортироваться по значению "словаря"
+  list_dct.sort(key=lambda i: i[1], reverse=True)
+  counter = 0
+  for i in list_dct:  # итерируемся по списку, чтобы вывести топ10 слов
+    if counter < 10:
+      print(i[0], ':', i[1])
+    counter += 1
+
+get_top10_words(data_str)
